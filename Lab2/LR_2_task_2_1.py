@@ -1,4 +1,3 @@
-# Завдання 2.2 (1). SVM з поліноміальним ядром
 import os
 import time
 
@@ -39,7 +38,7 @@ with open(input_file, 'r') as f:
             X.append(data)
             count_class2 += 1
 
-# Перетворення на масив numpy
+# Претворення на масив numpyе
 X = np.array(X)
 
 # Перетворення рядкових даних на числові

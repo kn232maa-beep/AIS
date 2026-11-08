@@ -1,4 +1,3 @@
-# Завдання 2.4. Порівняння якості класифікаторів для набору даних завдання 2.1 (income_data.txt)
 import os
 import time
 
@@ -21,7 +20,6 @@ from sklearn.svm import SVC
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 input_file = os.path.join(BASE_DIR, 'income_data.txt')
 
-# ===================== Завантаження та кодування даних (як у 2.1) =====================
 X = []
 count_class1 = 0
 count_class2 = 0
@@ -62,12 +60,8 @@ X = X_encoded[:, :-1].astype(int)
 y = X_encoded[:, -1].astype(int)
 print(f"Розмір набору: {X.shape}, класи: <=50K - {count_class1}, >50K - {count_class2}")
 
-# Розділення на навчальну та контрольну вибірки 80/20
 X_train, X_validation, Y_train, Y_validation = train_test_split(X, y, test_size=0.20, random_state=1)
 
-# ===================== Моделі =====================
-# Ознаки мають різні масштаби (fnlwgt ~ 10^5, age ~ 10^1), тому кожну модель
-# поєднуємо зі StandardScaler у конвеєрі (масштабування навчається лише на train-фолдах).
 models = []
 models.append(('LR', make_pipeline(preprocessing.StandardScaler(), LogisticRegression(solver='liblinear'))))
 models.append(('LDA', make_pipeline(preprocessing.StandardScaler(), LinearDiscriminantAnalysis())))
@@ -76,7 +70,7 @@ models.append(('CART', make_pipeline(preprocessing.StandardScaler(), DecisionTre
 models.append(('NB', make_pipeline(preprocessing.StandardScaler(), GaussianNB())))
 models.append(('SVM', make_pipeline(preprocessing.StandardScaler(), SVC(gamma='auto'))))
 
-# ===================== 10-кратна стратифікована крос-валідація =====================
+# 10-кратна стратифікована крос-валідація
 results = []
 names = []
 print("\nТочність (accuracy), 10-кратна крос-валідація: середнє (std)")
@@ -88,7 +82,6 @@ for name, model in models:
     names.append(name)
     print('%s: %f (%f)   [%.1f c]' % (name, cv_results.mean(), cv_results.std(), time.time() - start))
 
-# Порівняння алгоритмів
 pyplot.boxplot(results, tick_labels=names)
 pyplot.title('Algorithm Comparison (income_data)')
 pyplot.ylabel('accuracy')
@@ -96,7 +89,7 @@ pyplot.tight_layout()
 pyplot.savefig(os.path.join(BASE_DIR, "task4_algorithm_comparison.png"), dpi=150)
 pyplot.show()
 
-# ===================== Показники якості на контрольній вибірці =====================
+# Показники якості на контрольній вибірці
 print("\nПоказники якості на контрольній вибірці (20%), усереднення weighted:")
 print("%-5s %9s %10s %8s %8s" % ("Model", "Accuracy", "Precision", "Recall", "F1"))
 scores = {}
@@ -110,7 +103,7 @@ for name, model in models:
     scores[name] = (acc, prec, rec, f1)
     print("%-5s %9.4f %10.4f %8.4f %8.4f" % (name, acc, prec, rec, f1))
 
-# Вибір найкращої моделі за F1-мірою (клас >50K менший, тому F1 інформативніша за accuracy)
+# Вибір найкращої моделі за F1-мірою
 best_name = max(scores, key=lambda n: scores[n][3])
 best_model = dict(models)[best_name]
 print(f"\nНайкраща модель за F1: {best_name}")
@@ -120,7 +113,6 @@ target_names = label_encoder[-1].classes_
 print(confusion_matrix(Y_validation, pred))
 print(classification_report(Y_validation, pred, target_names=target_names))
 
-# Прогноз для тестової точки із завдання 2.1
 input_data = ['37', 'Private', '215646', 'HS-grad', '9', 'Never-married', 'Handlers-cleaners',
               'Not-in-family', 'White', 'Male', '0', '0', '40', 'United-States']
 input_data_encoded = [-1] * len(input_data)

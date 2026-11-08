@@ -1,4 +1,3 @@
-# Завдання 2.3. Порівняння якості класифікаторів на прикладі класифікації сортів ірисів
 import os
 
 import numpy as np
@@ -29,7 +28,7 @@ def save_and_show(name):
     pyplot.show()
 
 
-# ===================== КРОК 1. ЗАВАНТАЖЕННЯ ТА ВИВЧЕННЯ ДАНИХ =====================
+# КРОК 1. ЗАВАНТАЖЕННЯ ТА ВИВЧЕННЯ ДАНИХ
 iris_dataset = load_iris()
 
 print("Ключі iris_dataset: \n{}".format(iris_dataset.keys()))
@@ -46,11 +45,6 @@ print("Тип масиву target: {}".format(type(iris_dataset['target'])))
 print("Форма масиву target: {}".format(iris_dataset['target'].shape))
 print("Відповіді:\n{}".format(iris_dataset['target']))
 
-# Завантаження датасету
-# Варіант з методички (потребує інтернету):
-#   url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
-#   dataset = read_csv(url, names=names)
-# Тут ті самі дані беремо з sklearn, щоб програма працювала без мережі.
 names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
 dataset = DataFrame(iris_dataset['data'], columns=names[:4])
 dataset['class'] = ['Iris-' + iris_dataset['target_names'][t] for t in iris_dataset['target']]
@@ -67,7 +61,7 @@ print(dataset.describe())
 # Розподіл за атрибутом class
 print(dataset.groupby('class').size())
 
-# ===================== КРОК 2. ВІЗУАЛІЗАЦІЯ ДАНИХ =====================
+#  КРОК 2. ВІЗУАЛІЗАЦІЯ ДАНИХ
 # Діаграма розмаху
 dataset.plot(kind='box', subplots=True, layout=(2, 2), sharex=False, sharey=False)
 save_and_show("task3_boxplot.png")
@@ -83,24 +77,17 @@ colors = dataset['class'].map({'Iris-setosa': 'tab:red',
 scatter_matrix(dataset, c=colors, figsize=(9, 9), alpha=0.8)
 save_and_show("task3_scatter_matrix.png")
 
-# ===================== КРОК 3. НАВЧАЛЬНИЙ ТА ТЕСТОВИЙ НАБОРИ =====================
+# КРОК 3. НАВЧАЛЬНИЙ ТА ТЕСТОВИЙ НАБОРИ
 # Розділення датасету на навчальну та контрольну вибірки
 array = dataset.values
-
-# Вибір перших 4-х стовпців
 X = array[:, 0:4].astype(float)
-
-# Вибір 5-го стовпця
 y = array[:, 4]
 
-# Розділення X та y на навчальну та контрольну вибірки
 X_train, X_validation, Y_train, Y_validation = train_test_split(X, y, test_size=0.20, random_state=1)
 
-# ===================== КРОК 4. КЛАСИФІКАЦІЯ (ПОБУДОВА МОДЕЛІ) =====================
-# Завантажуємо алгоритми моделі
+# КРОК 4. КЛАСИФІКАЦІЯ (ПОБУДОВА МОДЕЛІ)
 models = []
-# multi_class='ovr' видалено з нових версій sklearn, тому схему "один проти всіх"
-# задаємо явно через OneVsRestClassifier
+
 models.append(('LR', OneVsRestClassifier(LogisticRegression(solver='liblinear'))))
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('KNN', KNeighborsClassifier()))
@@ -108,7 +95,6 @@ models.append(('CART', DecisionTreeClassifier(random_state=1)))
 models.append(('NB', GaussianNB()))
 models.append(('SVM', SVC(gamma='auto')))
 
-# Оцінюємо модель на кожній ітерації (стратифікована 10-кратна крос-валідація)
 results = []
 names = []
 
@@ -121,22 +107,23 @@ for name, model in models:
     print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
 
 # Порівняння алгоритмів
+pyplot.figure()
 pyplot.boxplot(results, tick_labels=names)
 pyplot.title('Algorithm Comparison')
 save_and_show("task3_algorithm_comparison.png")
 
-# ===================== КРОК 6. ПРОГНОЗ НА КОНТРОЛЬНІЙ ВИБІРЦІ =====================
+# КРОК 6. ПРОГНОЗ НА КОНТРОЛЬНІЙ ВИБІРЦІ
 model = SVC(gamma='auto')
 model.fit(X_train, Y_train)
 predictions = model.predict(X_validation)
 
-# ===================== КРОК 7. ОЦІНКА ЯКОСТІ МОДЕЛІ =====================
+# КРОК 7. ОЦІНКА ЯКОСТІ МОДЕЛІ
 print("\nОцінка моделі SVM на контрольній вибірці:")
 print("Accuracy:", accuracy_score(Y_validation, predictions))
 print(confusion_matrix(Y_validation, predictions))
 print(classification_report(Y_validation, predictions))
 
-# ===================== КРОК 8. ЗАСТОСУВАННЯ МОДЕЛІ ДЛЯ НОВИХ ДАНИХ =====================
+#  КРОК 8. ЗАСТОСУВАННЯ МОДЕЛІ ДЛЯ НОВИХ ДАНИХ
 X_new = np.array([[5, 2.9, 1, 0.2]])
 print("Форма масиву X_new: {}".format(X_new.shape))
 

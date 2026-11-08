@@ -1,4 +1,3 @@
-# Завдання 2.2 (2). SVM з гаусовим ядром
 import os
 import time
 
