@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(cd \"C:\\\\UNIVERSITY\\\\4_COURSE_1_2_SEMESTR\\\\AI\\\\Lab2\"; $env:PYTHONIOENCODING=\"utf-8\"; $env:MPLBACKEND=\"Agg\"; Measure-Command { & \"C:\\\\Users\\\\matvi\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe\" LR_2_task_1.py | Out-Host } | Select-Object TotalSeconds)",
-      "PowerShell(cd \"C:\\\\UNIVERSITY\\\\4_COURSE_1_2_SEMESTR\\\\AI\\\\Lab2\"; $env:PYTHONIOENCODING=\"utf-8\"; Measure-Command { & \"C:\\\\Users\\\\matvi\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe\" LR_2_task_2_1.py | Out-Host } | Select-Object TotalSeconds)",
-      "PowerShell(cd \"C:\\\\UNIVERSITY\\\\4_COURSE_1_2_SEMESTR\\\\AI\\\\Lab2\"; $env:PYTHONIOENCODING=\"utf-8\"; $py=\"C:\\\\Users\\\\matvi\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe\"; & $py LR_2_task_2_2.py; \"-----\"; & $py LR_2_task_2_3.py)"
-    ]
-  }
-}
